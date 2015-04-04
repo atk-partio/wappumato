@@ -157,7 +157,10 @@ function gameLoop() {
     }
 
     function checkCollisionToItself() {
-        //game.physics.arcade.collide(snakeHead, snakeSection, function() { died = true });
+        game.physics.arcade.overlap(snakeHead, snakeSection, function() { 
+            died = true; 
+            setAndShowHighScore();
+        });
 
     }
 
