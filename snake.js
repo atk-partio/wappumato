@@ -32,6 +32,7 @@ var g = 128;
 var b = 128;
 var scores = 0;
 var spawnedItem = null;
+var velocity = 270;
 
 function create() {
 
@@ -148,7 +149,7 @@ function gameLoop() {
     function setSnakeBodyVelocity() {
         snakeHead.body.velocity.setTo(0, 0);
         snakeHead.body.angularVelocity = 0;
-        snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
+        snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, velocity));
         snakeHead.body.collideWorldBounds = true;
     }
 
@@ -183,11 +184,11 @@ function gameLoop() {
     function reactToKeyboardEvents() {
         if (cursors.left.isDown)
         {
-            snakeHead.body.angularVelocity = -300;
+            snakeHead.body.angularVelocity = -velocity;
         }
         else if (cursors.right.isDown)
         {
-            snakeHead.body.angularVelocity = 300;
+            snakeHead.body.angularVelocity = velocity;
         }
     }
 }
@@ -251,6 +252,7 @@ function spawnNewItem() {
 function reactToItemCollision() {
     addOneScore();
     spawnNewItem();
+    velocity += 7;
 }
 
 function reactToCollisionToWallOrSelf() {
