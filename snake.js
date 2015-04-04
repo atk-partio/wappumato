@@ -16,6 +16,9 @@ var snakePath = new Array(); //arrary of positions(points) that have to be store
 var numSnakeSections = 30; //number of snake body sections
 var snakeSpacer = 6; //parameter that sets the spacing between sections
 var gameStarted = false;
+var r = 128;
+var g = 128;
+var b = 128;
 
 function create() {
 
@@ -57,6 +60,7 @@ function create() {
 }
 
 function update() {
+    changeBackgroundColor();
     if (gameStarted) {
         if (died) {
             gameOverScreen();
@@ -69,6 +73,33 @@ function update() {
     else {
         startScreen();
     }
+}
+
+function changeBackgroundColor() {
+    if (r == 255 || r == 0) {
+        r = 128;
+    }
+    if (g == 255 || g == 0) {
+        g = 128;
+    }
+    if (b == 255 || b == 0) {
+        b = 128;
+    }
+
+    r = r + (Math.random() < 0.5 ? -1 : 1);
+    g = g + (Math.random() < 0.5 ? -1 : 1);
+    b = b + (Math.random() < 0.5 ? -1 : 1);
+    game.stage.backgroundColor = rgbToHex(r, g, b);
+    console.log(r, g, b);
+}
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
 function gameLoop() {
