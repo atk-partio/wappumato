@@ -43,21 +43,35 @@ function create() {
 }
 
 function update() {
-
     if (gameStarted) {
+        gameLoop();
+    }
+    else {
+        startScreen();
+    }
+}
+
+function gameLoop() {
+
+    resetGameState();
+
+    // Everytime the snake head moves, insert the new location at the start of the array,
+    // and knock the last position off the end
+
+    moveSnake();
+
+    reactToKeyboardEvents();
+
+    function resetGameState() {
         snakeHead.body.velocity.setTo(0, 0);
         snakeHead.body.angularVelocity = 0;
-
         snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
+    }
 
-        // Everytime the snake head moves, insert the new location at the start of the array,
-        // and knock the last position off the end
-
+    function moveSnake() {
         var part = snakePath.pop();
 
         part.setTo(snakeHead.x, snakeHead.y);
-
-        snakePath.unshift(part);
 
         for (var i = 1; i <= numSnakeSections - 1; i++)
         {
@@ -65,6 +79,10 @@ function update() {
             snakeSection[i].y = (snakePath[i * snakeSpacer]).y;
         }
 
+        snakePath.unshift(part);
+    }
+
+    function reactToKeyboardEvents() {
         if (cursors.left.isDown)
         {
             snakeHead.body.angularVelocity = -300;
@@ -74,13 +92,13 @@ function update() {
             snakeHead.body.angularVelocity = 300;
         }
     }
-    else {
-        if (cursors.up.isDown) gameStarted = true;
-    }
+}
+
+function startScreen() {
+    if (cursors.up.isDown) gameStarted = true;
 }
 
 function render() {
-
     game.debug.spriteInfo(snakeHead, 32, 32);
 
 }
