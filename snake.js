@@ -242,28 +242,24 @@ function setAndShowHighScore(askNicely) {
     blackBackground.visible = true;
     scoreText.visible = true;
     spawnedItem.destroy();
-
-    var text = "Top 10 tulokset:\n\n";
     // luetaan Firebasesta viimeiset viisi pistemäärää
     scoreTen = scoreList.limitToLast(10);
+    var text = "";
     scoreTen.once('value', function(data) {
         var index = 0;
         // datasta saa ulos selkokielistä dadaa .val()-komennolla
         data.forEach(function(topEntry) {
             // koska paras tulos on vikana, piirretÃ¤Ã¤n lista alhaalta ylÃ¶s
-            text += topEntry.child('name').val() + ": " + topEntry.child('score').val() + "\n";
+            text = topEntry.child('name').val() + ": " + topEntry.child('score').val() + "\n" + text;
 
             index += 1;
 
             if (index == 10) {
-                text += "\n Paina jotain niin pääset taas pelaamaan! Jee!";
+                text = "Top 10 tulokset:\n\n" + text +  "\n Paina jotain niin pääset taas pelaamaan! Jee!";
                 scoreText.text = text;
             }
         });
     });
-
-
-
 }
 
 function addOneScore() {
