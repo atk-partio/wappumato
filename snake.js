@@ -4,7 +4,7 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'wappumato', { preload: preload, create: create, update: update,render : render });
 
 function preload() {
-    game.load.image('ball','assets/sprites/shinyball.png');
+    game.load.image('startscreen','images/startscreen.png');
 }
 
 var died = false;
@@ -41,11 +41,28 @@ function create() {
         snakePath[i] = new Phaser.Point(400, 300);
     }
 
+    var bmd = game.add.bitmapData(800, 600);
+
+    bmd.ctx.beginPath();
+    bmd.ctx.rect(0, 0, 800, 600);
+    bmd.ctx.fillStyle = '#000000';
+    bmd.ctx.fill();
+    blackBackground = game.add.sprite(0, 0, bmd);
+
+    startscreen = game.add.sprite(0, 0, 'startscreen');
+    startscreen.inputEnabled = true;
+    startscreen.events.onInputDown.add(closeStartscreen);
 }
 
 function update() {
     if (gameStarted) {
-        gameLoop();
+        if (died) {
+            gameOverScreen();
+        }
+        else {
+            gameLoop();
+        }
+
     }
     else {
         startScreen();
@@ -95,6 +112,7 @@ function gameLoop() {
 
     function checkCollisionToItself() {
         game.physics.arcade.collide(snakeHead, snakeSection, function() { died = true });
+
     }
 
     function reactToKeyboardEvents() {
@@ -110,10 +128,21 @@ function gameLoop() {
 }
 
 function startScreen() {
-    if (cursors.up.isDown) gameStarted = true;
+    if (cursors.up.isDown) {
+        closeStartscreen();
+    }
+}
+
+function closeStartscreen() {
+    gameStarted = true;
+    blackBackground.visible = false;
+    startscreen.visible = false;
+}
+
+function gameOverScreen() {
+
 }
 
 function render() {
-    game.debug.spriteInfo(snakeHead, 32, 32);
 
 }
