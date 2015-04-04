@@ -7,6 +7,16 @@ function preload() {
     game.load.image('startscreen','images/startscreen.png');
     game.load.image('noppa','images/noppa.png');
     game.load.audio('music', 'sounds/POL-rocketman-short.wav');
+
+    game.load.image('itemi1','images/apy.jpg');
+    game.load.image('itemi2','images/amfi.jpg');
+    game.load.image('itemi3','images/igristoje.jpg');
+    game.load.image('itemi4','images/ilmapallot.jpg');
+    game.load.image('itemi5','images/jaloviina.jpg');
+    game.load.image('itemi6','images/kaljashotti.jpg');
+    game.load.image('itemi7','images/kroketti.jpg');
+    game.load.image('itemi8','images/serpentiini.jpg');
+    game.load.image('itemi9','images/teekkaribileet.jpg');
 }
 
 var scoreList = new Firebase('https://brilliant-fire-631.firebaseio.com/scoreList');
@@ -21,6 +31,7 @@ var r = 128;
 var g = 128;
 var b = 128;
 var scores = 0;
+var spawnedItem = null;
 
 function create() {
 
@@ -50,6 +61,8 @@ function create() {
 
     var style = { font: "30px Arial", fill: "#ff0044", align: "left" };
     gameScoreText = game.add.text(0, 0, "Pisteitä: 0", style);
+
+    spawnNewItem();
 
     var bmd = game.add.bitmapData(800, 600);
 
@@ -122,7 +135,14 @@ function gameLoop() {
 
     checkCollisionToItself();
 
+    checkCollisionToItem();
+
     reactToKeyboardEvents();
+
+    function checkCollisionToItem() {
+        game.physics.arcade.overlap(snakeHead, spawnedItem, reactToItemCollision);
+    }
+
 
     function setSnakeBodyVelocity() {
         snakeHead.body.velocity.setTo(0, 0);
@@ -198,7 +218,7 @@ function setAndShowHighScore() {
 
     // pisteiden kirjoittaminen Firebaseen
     var playerScoreRef = scoreList.child(playerName);
-    playerScoreRef.setWithPriority({name : playerName, score : 1000}, 1000);
+    playerScoreRef.setWithPriority({name : playerName, score : scores}, scores);
 
     // luetaan Firebasesta viimeiset viisi pistemäärää
     scoreTen = scoreList.endAt().limit(10);
@@ -220,6 +240,21 @@ function setAndShowHighScore() {
 function addOneScore() {
     scores += 1;
     gameScoreText.text = "Pisteitä: " + scores;
+}
+
+function spawnNewItem() {
+    if (spawnedItem) {
+        spawnedItem.destroy();
+    }
+
+    var itemiIndex = Math.floor(Math.random() * 9) + 1;
+    spawnedItem = game.add.sprite(parseInt(Math.random() * 700), parseInt(Math.random() * 500), 'itemi' + itemiIndex);
+    game.physics.enable(spawnedItem, Phaser.Physics.ARCADE);
+}
+
+function reactToItemCollision() {
+    addOneScore();
+    spawnNewItem();
 }
 
 function render() {
