@@ -65,7 +65,7 @@ function create() {
     }
 
     var style = { font: "30px Arial", fill: "#ff0044", align: "left" };
-    gameScoreText = game.add.text(0, 0, "Pisteitä: 0", style);
+    gameScoreText = game.add.text(10, 10, "Pisteitä: 0", style);
 
     spawnNewItem();
 
@@ -87,8 +87,8 @@ function create() {
     music = game.add.audio('music', 1, true);
     music.play();
 
-    var scoreTextStyle = { font: "15px Arial", fill: "#ff0044", align: "left" };
-    scoreText = game.add.text(100, 100, "", scoreTextStyle);
+    var scoreTextStyle = { font: "18px Arial", fill: "#ff0044", align: "left" };
+    scoreText = game.add.text(50, 50, "", scoreTextStyle);
     scoreText.visible = false;
 }
 
@@ -240,6 +240,9 @@ function setAndShowHighScore(askNicely) {
     playerScoreRef.setWithPriority({name : playerName, score : scores}, scores);
 
     blackBackground.visible = true;
+    blackBackground.alpha = 0;
+    game.add.tween(blackBackground).to({alpha: 1}, 1000, Phaser.Easing.Linear.None, true);
+
     scoreText.visible = true;
     spawnedItem.destroy();
     // luetaan Firebasesta viimeiset viisi pistemäärää
@@ -263,7 +266,7 @@ function setAndShowHighScore(askNicely) {
 }
 
 function addOneScore() {
-    scores += 1;
+    scores += parseInt(Math.random() * 3) + 7;
     gameScoreText.text = "Pisteitä: " + scores;
 }
 
