@@ -108,12 +108,18 @@ function gameLoop() {
     }
 
     function checkCollisionToWalls() {
-        game.physics.arcade.collide(game.snakeHead, game.world.bounds, function() { died = true; });
+        if (snakeHead.x > game.world.bounds.width -25 || snakeHead.x < 25) {
+            died = true;
+            setAndShowHighScore();
+        } else if (snakeHead.y > game.world.bounds.height -25 || snakeHead.y < 25) {
+            died = true;
+            setAndShowHighScore();
+        }
 
     }
 
     function checkCollisionToItself() {
-        game.physics.arcade.collide(snakeHead, snakeSection, function() { died = true });
+        //game.physics.arcade.collide(snakeHead, snakeSection, function() { died = true });
 
     }
 
