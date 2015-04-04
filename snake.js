@@ -53,7 +53,7 @@ function update() {
 
 function gameLoop() {
 
-    resetGameState();
+    setSnakeBodyVelocity();
 
     // Everytime the snake head moves, insert the new location at the start of the array,
     // and knock the last position off the end
@@ -62,7 +62,7 @@ function gameLoop() {
 
     reactToKeyboardEvents();
 
-    function resetGameState() {
+    function setSnakeBodyVelocity() {
         snakeHead.body.velocity.setTo(0, 0);
         snakeHead.body.angularVelocity = 0;
         snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
