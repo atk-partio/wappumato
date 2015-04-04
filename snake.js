@@ -5,8 +5,10 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'wappumato', { preload: prel
 
 function preload() {
     game.load.image('startscreen','images/startscreen.png');
+    game.load.image('noppa','images/noppa.png');
 }
 
+var scoreList = new Firebase('https://brilliant-fire-631.firebaseio.com/scoreList');
 var died = false;
 var snakeHead; //head of snake sprite
 var snakeSection = new Array(); //array of sprites that make the snake body sections
@@ -23,7 +25,7 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    snakeHead = game.add.sprite(400, 300, 'ball');
+    snakeHead = game.add.sprite(400, 300, 'noppa');
     snakeHead.anchor.setTo(0.5, 0.5);
 
     game.physics.enable(snakeHead, Phaser.Physics.ARCADE);
@@ -31,7 +33,7 @@ function create() {
     //  Init snakeSection array
     for (var i = 1; i <= numSnakeSections-1; i++)
     {
-        snakeSection[i] = game.add.sprite(400, 300, 'ball');
+        snakeSection[i] = game.add.sprite(400, 300, 'noppa');
         snakeSection[i].anchor.setTo(0.5, 0.5);
     }
 
@@ -141,6 +143,29 @@ function closeStartscreen() {
 
 function gameOverScreen() {
 
+}
+
+function setAndShowHighScore() {
+    var playerName = prompt("Anna sun nimi niin saadaan vähän high skooreja tonne systeemiin.");
+    // pisteiden kirjoittaminen Firebaseen
+    var playerScoreRef = scoreList.child(playerName);
+    playerScoreRef.setWithPriority({name : playerName, score : 1000}, 1000);
+
+    // luetaan Firebasesta viimeiset viisi pistemäärää
+    scoreTen = scoreList.endAt().limit(10);
+    scoreTen.once('value', function(data) {
+        var index = 0;
+        // datasta saa ulos selkokielistä dadaa .val()-komennolla
+        data.forEach(function(topEntry) {
+            // koska paras tulos on vikana, piirretÃ¤Ã¤n lista alhaalta ylÃ¶s
+            //layer.add(new Kinetic.Text({x: 325, y: 325-30*index, text: topEntry.child('name').val(), fontSize: 18, fontFamily: 'Helvetica', fill: 'black'}));
+            //layer.add(new Kinetic.Text({x: 550, y: 325-30*index, text: topEntry.child('score').val(), fontSize: 18, fontFamily: 'Helvetica', fill: 'black'}));
+            //index++;
+        });
+    });
+
+    //layer.add(new Kinetic.Text({x: 310, y: 100, text: 'Sait yhteensÃ¤ ' + totalScore + ' pistettÃ¤!', fontSize: 24, fontFamily: 'Helvetica', fill: 'black'}));
+    //layer.add(new Kinetic.Text({x: 325, y: 175, text: 'Patekin tulevaisuuspelin TOP10', fontSize: 19, fontFamily: 'Helvetica', fill: 'black'}));
 }
 
 function render() {
