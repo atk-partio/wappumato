@@ -88,7 +88,7 @@ function gameLoop() {
     }
 
     function checkCollisionToWalls() {
-
+        game.physics.arcade.collide(snakeHead, game.world.bounds, function() { died = true; }, null, snakeHead);
 
     }
 
