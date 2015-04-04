@@ -71,6 +71,7 @@ function gameLoop() {
         snakeHead.body.velocity.setTo(0, 0);
         snakeHead.body.angularVelocity = 0;
         snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
+        snakeHead.body.collideWorldBounds = true;
     }
 
     function moveSnake() {
@@ -88,12 +89,12 @@ function gameLoop() {
     }
 
     function checkCollisionToWalls() {
-        game.physics.arcade.collide(snakeHead, game.world.bounds, function() { died = true; }, null, snakeHead);
+        game.physics.arcade.collide(game.snakeHead, game.world.bounds, function() { died = true; });
 
     }
 
     function checkCollisionToItself() {
-
+        game.physics.arcade.collide(snakeHead, snakeSection, function() { died = true });
     }
 
     function reactToKeyboardEvents() {
