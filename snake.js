@@ -51,6 +51,7 @@ function create() {
     {
         snakeSection[i] = game.add.sprite(400, 300, 'noppa');
         snakeSection[i].anchor.setTo(0.5, 0.5);
+        game.physics.enable(snakeSection[i], Phaser.Physics.ARCADE);
     }
 
     //  Init snakePath array
@@ -167,20 +168,15 @@ function gameLoop() {
 
     function checkCollisionToWalls() {
         if (snakeHead.x > game.world.bounds.width -25 || snakeHead.x < 25) {
-            died = true;
-            setAndShowHighScore();
+            reactToCollisionToWallOrSelf();
         } else if (snakeHead.y > game.world.bounds.height -25 || snakeHead.y < 25) {
-            died = true;
-            setAndShowHighScore();
+            reactToCollisionToWallOrSelf();
         }
 
     }
 
     function checkCollisionToItself() {
-        game.physics.arcade.overlap(snakeHead, snakeSection, function() { 
-            died = true; 
-            setAndShowHighScore();
-        });
+        game.physics.arcade.collide(snakeHead, snakeSection, reactToCollisionToWallOrSelf);
 
     }
 
@@ -255,6 +251,11 @@ function spawnNewItem() {
 function reactToItemCollision() {
     addOneScore();
     spawnNewItem();
+}
+
+function reactToCollisionToWallOrSelf() {
+    died = true;
+    setAndShowHighScore();
 }
 
 function render() {
