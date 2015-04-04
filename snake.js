@@ -1,5 +1,5 @@
-// Snake by Patrick OReilly and Richard Davey
-// Twitter: @pato_reilly Web: http://patricko.byethost9.com
+// Snake originally by Patrick OReilly and Richard Davey
+// ATP-kartio made this truly awesome
 
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'wappumato', { preload: preload, create: create, update: update,render : render });
 
@@ -16,6 +16,7 @@ var snakePath = new Array(); //arrary of positions(points) that have to be store
 var numSnakeSections = 30; //number of snake body sections
 var snakeSpacer = 6; //parameter that sets the spacing between sections
 var gameStarted = false;
+var scores = 0;
 
 function create() {
 
@@ -42,6 +43,9 @@ function create() {
     {
         snakePath[i] = new Phaser.Point(400, 300);
     }
+
+    var style = { font: "30px Arial", fill: "#ff0044", align: "left" };
+    gameScoreText = game.add.text(0, 0, "Pisteitä: 0", style);
 
     var bmd = game.add.bitmapData(800, 600);
 
@@ -172,6 +176,11 @@ function setAndShowHighScore() {
 
     //layer.add(new Kinetic.Text({x: 310, y: 100, text: 'Sait yhteensÃ¤ ' + totalScore + ' pistettÃ¤!', fontSize: 24, fontFamily: 'Helvetica', fill: 'black'}));
     //layer.add(new Kinetic.Text({x: 325, y: 175, text: 'Patekin tulevaisuuspelin TOP10', fontSize: 19, fontFamily: 'Helvetica', fill: 'black'}));
+}
+
+function addOneScore() {
+    scores += 1;
+    gameScoreText.text = "Pisteitä: " + scores;
 }
 
 function render() {
