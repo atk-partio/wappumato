@@ -75,7 +75,10 @@ function create() {
     bmd.ctx.rect(0, 0, 800, 600);
     bmd.ctx.fillStyle = '#000000';
     bmd.ctx.fill();
+
     blackBackground = game.add.sprite(0, 0, bmd);
+    blackBackground.inputEnabled = true;
+    blackBackground.events.onInputDown.add(reloadPageIfGameEnded);
 
     startscreen = game.add.sprite(0, 0, 'startscreen');
     startscreen.inputEnabled = true;
@@ -83,6 +86,10 @@ function create() {
 
     music = game.add.audio('music', 1, true);
     music.play();
+
+    var scoreTextStyle = { font: "15px Arial", fill: "#ff0044", align: "left" };
+    scoreText = game.add.text(100, 100, "", scoreTextStyle);
+    scoreText.visible = false;
 }
 
 function update() {
@@ -220,29 +227,43 @@ function gameOverScreen() {
 
 }
 
-function setAndShowHighScore() {
-    var playerName = prompt("Anna sun nimi niin saadaan vähän high skooreja tonne systeemiin.");
-    if (!playerName) return;
+function setAndShowHighScore(askNicely) {
+    var askNiceText = askNicely ? "Laitapa se nimi oikeasti! Ei täällä huijata." : "";
+    var playerName = prompt("Anna sun nimi niin saadaan vähän high skooreja tonne systeemiin. " + askNiceText);
+    if (!playerName) {
+        setAndShowHighScore(true);
+        return;
+    }
 
     // pisteiden kirjoittaminen Firebaseen
     var playerScoreRef = scoreList.child(playerName);
     playerScoreRef.setWithPriority({name : playerName, score : scores}, scores);
 
+    blackBackground.visible = true;
+    scoreText.visible = true;
+    spawnedItem.destroy();
+
+    var text = "Top 10 tulokset:\n\n";
     // luetaan Firebasesta viimeiset viisi pistemäärää
-    scoreTen = scoreList.endAt().limit(10);
+    scoreTen = scoreList.limitToLast(10);
     scoreTen.once('value', function(data) {
         var index = 0;
         // datasta saa ulos selkokielistä dadaa .val()-komennolla
         data.forEach(function(topEntry) {
             // koska paras tulos on vikana, piirretÃ¤Ã¤n lista alhaalta ylÃ¶s
-            //layer.add(new Kinetic.Text({x: 325, y: 325-30*index, text: topEntry.child('name').val(), fontSize: 18, fontFamily: 'Helvetica', fill: 'black'}));
-            //layer.add(new Kinetic.Text({x: 550, y: 325-30*index, text: topEntry.child('score').val(), fontSize: 18, fontFamily: 'Helvetica', fill: 'black'}));
-            //index++;
+            text += topEntry.child('name').val() + ": " + topEntry.child('score').val() + "\n";
+
+            index += 1;
+
+            if (index == 10) {
+                text += "\n Paina jotain niin pääset taas pelaamaan! Jee!";
+                scoreText.text = text;
+            }
         });
     });
 
-    //layer.add(new Kinetic.Text({x: 310, y: 100, text: 'Sait yhteensÃ¤ ' + totalScore + ' pistettÃ¤!', fontSize: 24, fontFamily: 'Helvetica', fill: 'black'}));
-    //layer.add(new Kinetic.Text({x: 325, y: 175, text: 'Patekin tulevaisuuspelin TOP10', fontSize: 19, fontFamily: 'Helvetica', fill: 'black'}));
+
+
 }
 
 function addOneScore() {
@@ -269,6 +290,11 @@ function reactToItemCollision() {
 function reactToCollisionToWallOrSelf() {
     died = true;
     setAndShowHighScore();
+}
+
+function reloadPageIfGameEnded() {
+    console.log("jes");
+    if (died) window.location.reload();
 }
 
 function render() {
