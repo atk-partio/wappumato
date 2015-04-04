@@ -94,10 +94,10 @@ function changeBackgroundColor() {
         b = 128;
     }
 
-    r = r + (Math.random() < 0.5 ? -1 : 1);
-    g = g + (Math.random() < 0.5 ? -1 : 1);
-    b = b + (Math.random() < 0.5 ? -1 : 1);
-    game.stage.backgroundColor = rgbToHex(r, g, b);
+    r = r + (Math.random() < 0.6 ? -1 : 1);
+    g = g + (Math.random() < 0.3 ? -1 : 1);
+    b = b + (Math.random() < 0.7 ? -1 : 1);
+    //game.stage.backgroundColor = rgbToHex(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256));
 }
 
 function componentToHex(c) {
