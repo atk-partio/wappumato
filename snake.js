@@ -7,6 +7,7 @@ function preload() {
     game.load.image('ball','assets/sprites/shinyball.png');
 }
 
+var died = false;
 var snakeHead; //head of snake sprite
 var snakeSection = new Array(); //array of sprites that make the snake body sections
 var snakePath = new Array(); //arrary of positions(points) that have to be stored for the path the sections follow
@@ -60,6 +61,10 @@ function gameLoop() {
 
     moveSnake();
 
+    checkCollisionToWalls();
+
+    checkCollisionToItself();
+
     reactToKeyboardEvents();
 
     function setSnakeBodyVelocity() {
@@ -80,6 +85,15 @@ function gameLoop() {
         }
 
         snakePath.unshift(part);
+    }
+
+    function checkCollisionToWalls() {
+
+
+    }
+
+    function checkCollisionToItself() {
+
     }
 
     function reactToKeyboardEvents() {
