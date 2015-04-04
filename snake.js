@@ -6,6 +6,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'wappumato', { preload: prel
 function preload() {
     game.load.image('startscreen','images/startscreen.png');
     game.load.image('noppa','images/noppa.png');
+    game.load.audio('music', 'sounds/POL-rocketman-short.wav');
 }
 
 var scoreList = new Firebase('https://brilliant-fire-631.firebaseio.com/scoreList');
@@ -61,6 +62,9 @@ function create() {
     startscreen = game.add.sprite(0, 0, 'startscreen');
     startscreen.inputEnabled = true;
     startscreen.events.onInputDown.add(closeStartscreen);
+
+    music = game.add.audio('music', 1, true);
+    music.play();
 }
 
 function update() {
@@ -187,6 +191,8 @@ function gameOverScreen() {
 
 function setAndShowHighScore() {
     var playerName = prompt("Anna sun nimi niin saadaan vähän high skooreja tonne systeemiin.");
+    if (!playerName) return;
+
     // pisteiden kirjoittaminen Firebaseen
     var playerScoreRef = scoreList.child(playerName);
     playerScoreRef.setWithPriority({name : playerName, score : 1000}, 1000);
