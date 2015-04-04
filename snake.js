@@ -1,5 +1,5 @@
-// Snake by Patrick OReilly and Richard Davey
-// Twitter: @pato_reilly Web: http://patricko.byethost9.com
+// Snake originally by Patrick OReilly and Richard Davey
+// ATP-kartio made this truly awesome
 
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'wappumato', { preload: preload, create: create, update: update,render : render });
 
@@ -19,6 +19,7 @@ var gameStarted = false;
 var r = 128;
 var g = 128;
 var b = 128;
+var scores = 0;
 
 function create() {
 
@@ -45,6 +46,9 @@ function create() {
     {
         snakePath[i] = new Phaser.Point(400, 300);
     }
+
+    var style = { font: "30px Arial", fill: "#ff0044", align: "left" };
+    gameScoreText = game.add.text(0, 0, "Pisteitä: 0", style);
 
     var bmd = game.add.bitmapData(800, 600);
 
@@ -90,7 +94,6 @@ function changeBackgroundColor() {
     g = g + (Math.random() < 0.5 ? -1 : 1);
     b = b + (Math.random() < 0.5 ? -1 : 1);
     game.stage.backgroundColor = rgbToHex(r, g, b);
-    console.log(r, g, b);
 }
 
 function componentToHex(c) {
@@ -139,12 +142,18 @@ function gameLoop() {
     }
 
     function checkCollisionToWalls() {
-        game.physics.arcade.collide(game.snakeHead, game.world.bounds, function() { died = true; });
+        if (snakeHead.x > game.world.bounds.width -25 || snakeHead.x < 25) {
+            died = true;
+            setAndShowHighScore();
+        } else if (snakeHead.y > game.world.bounds.height -25 || snakeHead.y < 25) {
+            died = true;
+            setAndShowHighScore();
+        }
 
     }
 
     function checkCollisionToItself() {
-        game.physics.arcade.collide(snakeHead, snakeSection, function() { died = true });
+        //game.physics.arcade.collide(snakeHead, snakeSection, function() { died = true });
 
     }
 
@@ -197,6 +206,11 @@ function setAndShowHighScore() {
 
     //layer.add(new Kinetic.Text({x: 310, y: 100, text: 'Sait yhteensÃ¤ ' + totalScore + ' pistettÃ¤!', fontSize: 24, fontFamily: 'Helvetica', fill: 'black'}));
     //layer.add(new Kinetic.Text({x: 325, y: 175, text: 'Patekin tulevaisuuspelin TOP10', fontSize: 19, fontFamily: 'Helvetica', fill: 'black'}));
+}
+
+function addOneScore() {
+    scores += 1;
+    gameScoreText.text = "Pisteitä: " + scores;
 }
 
 function render() {
