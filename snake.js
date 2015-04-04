@@ -27,9 +27,12 @@ var snakePath = new Array(); //arrary of positions(points) that have to be store
 var numSnakeSections = 30; //number of snake body sections
 var snakeSpacer = 6; //parameter that sets the spacing between sections
 var gameStarted = false;
-var r = 128;
+var r = 0;
 var g = 128;
-var b = 128;
+var b = 255;
+var goRup = true;
+var goGup = false;
+var goBup = false;
 var scores = 0;
 var spawnedItem = null;
 var velocity = 270;
@@ -99,20 +102,28 @@ function update() {
 }
 
 function changeBackgroundColor() {
-    if (r == 255 || r == 0) {
-        r = 128;
+    if (r >= 255) {
+        goRup = false;
+    } else if (r <= 0) {
+        goRup = true;
     }
-    if (g == 255 || g == 0) {
-        g = 128;
+    if (g >= 255) {
+        goGup = false;
+    } else if (g <= 0) {
+        goGup = true;
     }
-    if (b == 255 || b == 0) {
-        b = 128;
+    if (b >= 255) {
+        goBup = false;
+    } else if (b <= 0) {
+        goBup = true;
     }
 
-    r = r + (Math.random() < 0.6 ? -1 : 1);
-    g = g + (Math.random() < 0.3 ? -1 : 1);
-    b = b + (Math.random() < 0.7 ? -1 : 1);
-    //game.stage.backgroundColor = rgbToHex(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256));
+
+    goRup ? r++ : r--;
+    goGup ? g++ : g--;
+    goBup ? b++ : b--;
+
+    game.stage.backgroundColor = rgbToHex(r, g, b);
 }
 
 function componentToHex(c) {
